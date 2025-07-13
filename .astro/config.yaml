@@ -1,0 +1,9 @@
+project:
+    name: customer-segmentation-mlops
+
+deployments:
+    - name: customer-segmentation-mlops
+      executor: CELERY
+      image:
+        name: quay.io/astronomer/astro-runtime:13.1.0
+      env: dev

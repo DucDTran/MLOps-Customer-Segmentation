@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/duc.tran/Personal/customer_segmentation_mlops/mlruns/0/32e785bfecd247189dd9c46ffac1a266/artifacts
+end_time: 1752395714545
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 32e785bfecd247189dd9c46ffac1a266
+run_name: abundant-tern-66
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1752395553533
+status: 4
+tags: []
+user_id: duc.tran

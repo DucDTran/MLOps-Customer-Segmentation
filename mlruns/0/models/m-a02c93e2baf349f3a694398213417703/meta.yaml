@@ -1,0 +1,10 @@
+artifact_location: file:///Users/duc.tran/Personal/customer_segmentation_mlops/mlruns/0/models/m-a02c93e2baf349f3a694398213417703/artifacts
+creation_timestamp: 1752376767233
+experiment_id: '0'
+last_updated_timestamp: 1752376770091
+model_id: m-a02c93e2baf349f3a694398213417703
+model_type: null
+name: best_rf
+source_run_id: f86b0f33b08f40ca99144d5fcc879e6b
+status: 2
+status_message: null

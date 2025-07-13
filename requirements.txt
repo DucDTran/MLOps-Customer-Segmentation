@@ -1,0 +1,17 @@
+pandas
+numpy
+apache-airflow-providers-google
+setuptools
+psycopg2
+scikit-learn
+redis
+nltk
+seaborn
+plotly
+wordcloud
+xgboost
+catboost
+lightgbm
+scipy
+matplotlib
+mlflow
