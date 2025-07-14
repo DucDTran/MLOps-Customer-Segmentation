@@ -4,7 +4,7 @@ variables:
   GCP_REGION: "us-central1"
   APP_NAME: "customer-segmentation-app"
   REPO_NAME: "customer-segmentation-repo"
-  IMAGE_NAME: "$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$REPO_NAME/$APP_NAME"
+  IMAGE_NAME: "us-central1-docker.pkg.dev/customer-segmentation-465514/customer-segmentation-repo"
 
 stages:
   - build
