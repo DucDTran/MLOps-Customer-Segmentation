@@ -1,45 +1,132 @@
-Overview
-========
+# Customer Segmentation MLOps
 
-Welcome to Astronomer! This project was generated after you ran 'astro dev init' using the Astronomer CLI. This readme describes the contents of the project, as well as how to run Apache Airflow on your local machine.
+This project provides an end-to-end pipeline for customer segmentation and market basket analysis using machine learning. It includes data ingestion, processing, feature engineering, model training, and a Streamlit web app for interactive predictions and recommendations. The project is designed for extensibility and MLOps best practices, with support for monitoring and deployment.
 
-Project Contents
-================
+---
 
-Your Astro project contains the following files and folders:
+## Project Structure
 
-- dags: This folder contains the Python files for your Airflow DAGs. By default, this directory includes one example DAG:
-    - `example_astronauts`: This DAG shows a simple ETL pipeline example that queries the list of astronauts currently in space from the Open Notify API and prints a statement for each astronaut. The DAG uses the TaskFlow API to define tasks in Python, and dynamic task mapping to dynamically print a statement for each astronaut. For more on how this DAG works, see our [Getting started tutorial](https://www.astronomer.io/docs/learn/get-started-with-airflow).
-- Dockerfile: This file contains a versioned Astro Runtime Docker image that provides a differentiated Airflow experience. If you want to execute other commands or overrides at runtime, specify them here.
-- include: This folder contains any additional files that you want to include as part of your project. It is empty by default.
-- packages.txt: Install OS-level packages needed for your project by adding them to this file. It is empty by default.
-- requirements.txt: Install Python packages needed for your project by adding them to this file. It is empty by default.
-- plugins: Add custom or community plugins for your project to this file. It is empty by default.
-- airflow_settings.yaml: Use this local-only file to specify Airflow Connections, Variables, and Pools instead of entering them in the Airflow UI as you develop DAGs in this project.
+- **dags/**: Airflow DAGs for orchestrating data extraction from Google Cloud Storage to a Postgres database.
+- **pipeline/**: Python scripts for running the training and prediction pipelines.
+- **src/**: Core modules for data ingestion, processing, feature engineering, and model training.
+- **utils/**: Utility scripts for clustering, feature engineering, and text processing.
+- **artifacts/**: Stores trained models, scalers, and processed data.
+- **streamlit_app.py**: Streamlit web app for customer segmentation and recommendations.
+- **docker-compose.yml**: For running Prometheus and Grafana for monitoring.
+- **requirements.txt**: Python dependencies.
 
-Deploy Your Project Locally
-===========================
+---
 
-Start Airflow on your local machine by running 'astro dev start'.
+## General Workflow
 
-This command will spin up five Docker containers on your machine, each for a different Airflow component:
+1. **Data Extraction**:  
+   Use the Airflow DAG (`extract_data_from_gcp.py`) to extract raw e-commerce data from Google Cloud Storage and load it into a Postgres database.
 
-- Postgres: Airflow's Metadata Database
-- Scheduler: The Airflow component responsible for monitoring and triggering tasks
-- DAG Processor: The Airflow component responsible for parsing DAGs
-- API Server: The Airflow component responsible for serving the Airflow UI and API
-- Triggerer: The Airflow component responsible for triggering deferred tasks
+2. **Data Ingestion**:  
+   The training pipeline (`pipeline/training_pipeline.py`) ingests data from the database and saves it as a CSV file.
 
-When all five containers are ready the command will open the browser to the Airflow UI at http://localhost:8080/. You should also be able to access your Postgres Database at 'localhost:5432/postgres' with username 'postgres' and password 'postgres'.
+3. **Data Processing & Feature Engineering**:  
+   The pipeline cleans the data, performs clustering on products and customers, and stores features in Redis.
 
-Note: If you already have either of the above ports allocated, you can either [stop your existing Docker containers or change the port](https://www.astronomer.io/docs/astro/cli/troubleshoot-locally#ports-are-not-available-for-my-local-airflow-webserver).
+4. **Model Training**:  
+   The pipeline trains multiple models (Random Forest, XGBoost, LightGBM) for customer segmentation, logs metrics to MLflow, and saves the best models.
 
-Deploy Your Project to Astronomer
-=================================
+5. **Prediction & Recommendation**:  
+   The Streamlit app allows users to upload their own transaction data, select a customer, and receive segment predictions and product recommendations.
 
-If you have an Astronomer account, pushing code to a Deployment on Astronomer is simple. For deploying instructions, refer to Astronomer documentation: https://www.astronomer.io/docs/astro/deploy-code/
+6. **Monitoring**:  
+   Prometheus and Grafana are available for monitoring metrics from the Streamlit app.
 
-Contact
-=======
+---
 
-The Astronomer CLI is maintained with love by the Astronomer team. To report a bug or suggest a change, reach out to our support.
+## Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone <your-repo-url>
+cd customer_segmentation_mlops
+```
+
+### 2. Install Dependencies
+
+It is recommended to use a virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 3. Set Up Environment
+
+- Ensure you have access to a Postgres database and update `config/database_config.py` with your credentials.
+- (Optional) Set up Google Cloud credentials if using the Airflow DAG for GCS extraction.
+
+### 4. Run Data Extraction (Optional)
+
+If you want to extract data from GCS, start Airflow and trigger the `extract_ecommerce_data` DAG:
+
+```bash
+astro dev start
+# Access Airflow UI at http://localhost:8080 and trigger the DAG
+```
+
+### 5. Run the Training Pipeline
+
+This will ingest data, process it, engineer features, and train models:
+
+```bash
+python pipeline/training_pipeline.py
+```
+
+Artifacts (models, scalers, processed data) will be saved in the `artifacts/` directory.
+
+### 6. Run the Streamlit App
+
+Start the web app for interactive predictions and recommendations:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+- Upload your own CSV transaction data.
+- Select a customer to view their segment and recommendations.
+
+### 7. (Optional) Monitoring
+
+To enable monitoring with Prometheus and Grafana:
+
+```bash
+docker-compose up -d
+```
+
+- Prometheus: [http://localhost:9090](http://localhost:9090)
+- Grafana: [http://localhost:3000](http://localhost:3000) (default user/pass: admin/admin)
+
+---
+
+## Customization
+
+- **Data Source**: Modify the Airflow DAG or `src/data_ingestion.py` to connect to your own data sources.
+- **Modeling**: Update `src/model_training.py` to experiment with different models or hyperparameters.
+- **Feature Engineering**: Extend `utils/feature_engineering.py` and related scripts for new features.
+
+---
+
+## Requirements
+
+See `requirements.txt` for all Python dependencies.
+
+---
+
+## License
+
+MIT License
+
+---
+
+## Contact
+
+For questions or support, please contact [Duc Tran](mailto:your-email@example.com).
