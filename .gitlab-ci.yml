@@ -1,12 +1,9 @@
-# Use the official Google Cloud SDK image
 image: google/cloud-sdk:latest
 
 variables:
-  # Replace with your desired values
   GCP_REGION: "us-central1"
   APP_NAME: "customer-segmentation-app"
   REPO_NAME: "customer-segmentation-repo"
-  # Construct the full image name for Artifact Registry
   IMAGE_NAME: "$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$REPO_NAME/$APP_NAME"
 
 stages:
@@ -19,12 +16,10 @@ build:
     - main
   script:
     - echo "Authenticating with Google Cloud..."
-    # Authenticate using the service account key stored in the GitLab CI/CD variable
     - gcloud auth activate-service-account --key-file $GCP_SERVICE_ACCOUNT_KEY
     - echo "Configuring Docker to use gcloud as a credential helper..."
     - gcloud auth configure-docker $GCP_REGION-docker.pkg.dev
     - echo "Building the Docker image with Google Cloud Build..."
-    # Submit the build to Cloud Build. The image will be tagged with the commit SHA for versioning.
     - gcloud builds submit . --tag "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
     - echo "Build complete."
 
@@ -36,7 +31,6 @@ deploy:
     - echo "Authenticating with Google Cloud..."
     - gcloud auth activate-service-account --key-file $GCP_SERVICE_ACCOUNT_KEY
     - echo "Deploying to Google Cloud Run..."
-    # Deploy the specific image version that was just built to Cloud Run
     - gcloud run deploy $APP_NAME \
         --image "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA" \
         --platform "managed" \
