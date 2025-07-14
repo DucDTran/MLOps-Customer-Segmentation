@@ -15,7 +15,6 @@ stages:
 
 build:
   stage: build
-  # We only want to build on commits to the main branch
   only:
     - main
   script:
@@ -31,7 +30,6 @@ build:
 
 deploy:
   stage: deploy
-  # We only want to deploy on commits to the main branch
   only:
     - main
   script:
