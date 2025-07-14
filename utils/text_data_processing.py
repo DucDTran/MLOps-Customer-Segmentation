@@ -5,6 +5,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from collections import Counter
 import re
+import json
 
 stemmer = PorterStemmer()
 stop_words = set(stopwords.words('english'))
@@ -62,6 +63,9 @@ def text_data_processing(cleaned_data):
     # Get term frequencies
     term_freq = Counter(all_terms)
     top_100_terms = [term for term, count in term_freq.most_common(100)]
+    with open ('artifacts/objects/top_100_terms.json', 'w') as f:
+        json.dump(top_100_terms, f)
+
     # Create text features matrix
     text_features = []
     stock_codes = []

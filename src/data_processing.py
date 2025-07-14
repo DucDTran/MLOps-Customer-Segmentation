@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import sys
 import nltk
 from src.feature_store import RedisFeatureStore
@@ -9,7 +10,8 @@ from utils.text_data_processing import text_data_processing
 from utils.customers_clustering import customers_clustering
 from utils.products_clustering import products_clustering
 from utils.customers_radar import customers_radar
-from config.paths_config import TRAIN_DATA_PATH
+from config.paths_config import DATA_PATH
+import os
 
 nltk.download('punkt_tab')
 logger = get_logger(__name__)
@@ -31,7 +33,10 @@ class DataProcessing:
         
     def preprocess_data(self):
         try:
+            os.makedirs('artifacts/data', exist_ok=True)
             cleaned_data = data_cleaning(self.train_data)
+            cleaned_data.replace([np.inf, -np.inf], np.nan, inplace=True)
+            cleaned_data.fillna(0, inplace=True)
             products_df, products_with_features = text_data_processing(cleaned_data)
             product_clusters_df = products_clustering(products_df, products_with_features)
             customer_clusters_df = customers_clustering(cleaned_data, product_clusters_df)
@@ -83,5 +88,5 @@ class DataProcessing:
         
 if __name__ == "__main__":
     feature_store = RedisFeatureStore()
-    data_processor = DataProcessing(train_data_path=TRAIN_DATA_PATH, feature_store=feature_store)
+    data_processor = DataProcessing(train_data_path=DATA_PATH, feature_store=feature_store)
     data_processor.run()

@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/duc.tran/Personal/customer_segmentation_mlops/mlruns/0/f0a198697d6a46228dfa8b7af8d58e2a/artifacts
+end_time: 1752460302642
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: f0a198697d6a46228dfa8b7af8d58e2a
+run_name: enthused-gnat-911
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1752460292310
+status: 4
+tags: []
+user_id: duc.tran

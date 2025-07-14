@@ -3,6 +3,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
 import pandas as pd
+from joblib import dump
 
 def products_clustering(products_df, products_with_features):
 
@@ -43,5 +44,10 @@ def products_clustering(products_df, products_with_features):
         products_df[['StockCode', 'median_unit_price', 'mode_description']], 
         on='StockCode'
     )
+
+    dump(scaler, 'artifacts/objects/products_scaler.joblib')
+    dump(kmeans, 'artifacts/objects/products_kmeans.joblib')
+
+    product_clusters_df.to_csv('artifacts/data/product_clusters.csv', index=False)
 
     return product_clusters_df

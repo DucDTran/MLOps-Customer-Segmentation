@@ -26,7 +26,7 @@ class ModelTraining:
         self.model_save_path = model_save_path
         self.train_data = None
         self.processed_data_path = processed_data_path
-        
+
         os.makedirs(self.model_save_path, exist_ok=True)
         os.makedirs(self.processed_data_path, exist_ok=True)
         logger.info(f"Model Training initialized")
@@ -74,9 +74,9 @@ class ModelTraining:
             mlflow.log_param("xgb_param_grid", xgb_param_grid)
             mlflow.log_param("lgbm_param_grid", lgbm_param_grid)
 
-            rf_grid = GridSearchCV(RandomForestClassifier(random_state=84), rf_param_grid, cv=5)
-            xgb_grid = GridSearchCV(XGBClassifier(random_state=84), xgb_param_grid, cv=5)
-            lgbm_grid = GridSearchCV(LGBMClassifier(random_state=84), lgbm_param_grid, cv=5)
+            rf_grid = GridSearchCV(RandomForestClassifier(random_state=84), rf_param_grid, cv=3)
+            xgb_grid = GridSearchCV(XGBClassifier(random_state=84), xgb_param_grid, cv=3)
+            lgbm_grid = GridSearchCV(LGBMClassifier(random_state=84), lgbm_param_grid, cv=3)
 
             rf_grid.fit(X_train, y_train)
             xgb_grid.fit(X_train, y_train)
@@ -191,6 +191,9 @@ class ModelTraining:
                 ensemble_accuracy = accuracy_score(y_val, ensemble_predictions)
                 mlflow.log_metric("ensemble_accuracy", ensemble_accuracy)
                 logger.info(f"\nEnsemble Accuracy: {ensemble_accuracy:.4f}")
+
+                logger.info("Saving results...")
+                
 
         except Exception as e:
             logger.error(f"Error running model training: {e}")

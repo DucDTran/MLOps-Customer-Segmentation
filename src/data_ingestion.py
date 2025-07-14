@@ -4,7 +4,7 @@ from src.logger import get_logger
 from src.custom_exception import CustomException
 from sklearn.model_selection import train_test_split
 from config.database_config import DB_CONFIG
-from config.paths_config import RAW_DIR, TRAIN_DATA_PATH, TEST_DATA_PATH
+from config.paths_config import RAW_DIR, DATA_PATH
 import os
 import sys
 
@@ -41,9 +41,7 @@ class DataIngestion:
         
     def save_data(self, data):
         try:
-            train_data, test_data = train_test_split(data, test_size=0.2, random_state=42)
-            train_data.to_csv(TRAIN_DATA_PATH, index=False)
-            test_data.to_csv(TEST_DATA_PATH, index=False)
+            data.to_csv(DATA_PATH, index=False)
             logger.info(f"Data saved successfully to {self.output_dir}")
         except Exception as e:
             logger.error(f"Error saving data to {self.output_dir}: {e}")

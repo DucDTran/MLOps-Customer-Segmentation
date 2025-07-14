@@ -3,6 +3,7 @@ from airflow.providers.google.cloud.transfers.gcs_to_local import GCSToLocalFile
 from airflow.providers.google.cloud.operators.gcs import GCSListObjectsOperator
 from airflow.providers.google.cloud.hooks.gcs import GCSHook
 from airflow.operators.python import PythonOperator
+# from airflow.providers.standard.operators.python import PythonOperator
 from airflow.hooks.base import BaseHook
 from datetime import datetime
 import pandas as pd
@@ -15,9 +16,8 @@ def load_to_sql(file_name:str, bucket_name:str):
     engine = sqlalchemy.create_engine(f"postgresql+psycopg2://{conn.login}:{conn.password}@{conn.host}:{conn.port}/{conn.schema}")
    
     file_bytes = gcs_hook.download(bucket_name=bucket_name, object_name=file_name)
-    with pd.read_csv(io.BytesIO(file_bytes), chunksize=10000, encoding="latin1") as reader:
-        for chunk in reader:
-            chunk.to_sql("ecommerce_data", engine, if_exists="append", index=False)
+    data = pd.read_csv(io.BytesIO(file_bytes), encoding="latin1")
+    data.to_sql("ecommerce_data", engine, if_exists="replace", index=False)
 
 with DAG(
     dag_id="extract_ecommerce_data",

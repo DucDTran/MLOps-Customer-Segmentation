@@ -3,7 +3,7 @@ numpy
 apache-airflow-providers-google
 setuptools
 psycopg2
-scikit-learn
+scikit-learn==1.7.0
 redis
 nltk
 seaborn
@@ -15,3 +15,4 @@ lightgbm
 scipy
 matplotlib
 mlflow
+prometheus-client
