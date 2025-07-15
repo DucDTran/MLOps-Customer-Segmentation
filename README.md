@@ -17,6 +17,8 @@ This project provides an end-to-end MLOps pipeline for customer segmentation and
 - **Dockerfile**: Docker image definition for the app.
 - **requirements.txt**: Python dependencies.
 
+![System Architecture](imgs/ml_system.png)
+
 ---
 
 ## General Workflow
