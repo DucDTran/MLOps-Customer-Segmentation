@@ -1,9 +1,12 @@
 FROM quay.io/astronomer/astro-runtime:13.1.0
 
+WORKDIR /usr/local/astro
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["streamlit", "run", "streamlit_app.py", "--server.port=${PORT}", "--server.address=0.0.0.0"]
+ENV HOST 0.0.0.0
+
+CMD ["streamlit", "run", "streamlit_app.py"]
