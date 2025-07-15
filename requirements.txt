@@ -16,3 +16,4 @@ scipy
 matplotlib
 mlflow
 prometheus-client
+streamlit
