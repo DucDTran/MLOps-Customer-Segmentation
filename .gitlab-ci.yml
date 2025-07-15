@@ -4,7 +4,7 @@ variables:
   GCP_REGION: "us-central1"
   APP_NAME: "customer-segmentation-app"
   REPO_NAME: "customer-segmentation-repo"
-  IMAGE_NAME: "us-central1-docker.pkg.dev/customer-segmentation-465514/customer-segmentation-repo"
+  IMAGE_NAME: "us-central1-docker.pkg.dev/customer-segmentation-465514/customer-segmentation-repo/customer-segmentation-app"
   DOCKER_VERSION: "24.0.5"
 
 stages:
@@ -27,8 +27,13 @@ build:
     # - gcloud builds submit . --project="customer-segmentation-465514" --tag "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
     # # - gcloud builds submit . --project="customer-segmentation-465514" --gcs-source-staging-dir="gs://customer-segmentation-cloudbuild/source" --tag "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}" --quiet
     # - echo "Build complete."
-    # 1. Install the gcloud CLI in the temporary Docker container
-    - apk add --no-cache google-cloud-cli
+
+
+    # 1. Install necessary dependencies and the Google Cloud CLI
+    - apk add --no-cache curl python3 py3-pip
+    - pip install --upgrade pip
+    - curl -sSL https://sdk.cloud.google.com | bash > /dev/null
+    - export PATH=$PATH:/root/google-cloud-sdk/bin
     
     # 2. Authenticate to Google Cloud using the CI/CD variable
     - echo "Authenticating with Google Cloud..."
