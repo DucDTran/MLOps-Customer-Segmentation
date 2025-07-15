@@ -8,7 +8,6 @@ redis
 nltk
 seaborn
 plotly
-wordcloud
 xgboost
 catboost
 lightgbm
