@@ -30,7 +30,7 @@ build:
 
 
     # 1. Install necessary dependencies and the Google Cloud CLI
-    - apk add --no-cache curl python3 py3-pip
+    - apk add --no-cache curl python3 py3-pip bash
     - pip install --upgrade pip
     - curl -sSL https://sdk.cloud.google.com | bash > /dev/null
     - export PATH=$PATH:/root/google-cloud-sdk/bin
