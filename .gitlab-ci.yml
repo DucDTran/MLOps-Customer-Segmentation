@@ -20,7 +20,8 @@ build:
     - echo "Configuring Docker to use gcloud as a credential helper..."
     - gcloud auth configure-docker $GCP_REGION-docker.pkg.dev
     - echo "Building the Docker image with Google Cloud Build..."
-    - gcloud builds submit --no-source --tag "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
+    # - gcloud builds submit --no-source --tag "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
+    - gcloud builds submit . --gcs-source-staging-dir=gs://customer-segmentation-cloudbuild/source --tag "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}" --quiet
     - echo "Build complete."
 
 deploy:
