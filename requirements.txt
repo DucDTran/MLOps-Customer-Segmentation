@@ -2,7 +2,7 @@ pandas
 numpy
 apache-airflow-providers-google
 setuptools
-psycopg2
+psycopg2-binary
 scikit-learn==1.7.0
 redis
 nltk

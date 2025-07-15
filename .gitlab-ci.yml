@@ -5,6 +5,7 @@ variables:
   APP_NAME: "customer-segmentation-app"
   REPO_NAME: "customer-segmentation-repo"
   IMAGE_NAME: "us-central1-docker.pkg.dev/customer-segmentation-465514/customer-segmentation-repo"
+  DOCKER_VERSION: "24.0.5"
 
 stages:
   - build
@@ -12,20 +13,45 @@ stages:
 
 build:
   stage: build
+  image: docker:${DOCKER_VERSION}
+  services:
+    - docker:${DOCKER_VERSION}-dind
   only:
     - main
   script:
+    # - echo "Authenticating with Google Cloud..."
+    # - gcloud auth activate-service-account --key-file $GCP_SERVICE_ACCOUNT_KEY
+    # - echo "Configuring Docker to use gcloud as a credential helper..."
+    # - gcloud auth configure-docker $GCP_REGION-docker.pkg.dev
+    # - echo "Building the Docker image with Google Cloud Build..."
+    # - gcloud builds submit . --project="customer-segmentation-465514" --tag "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
+    # # - gcloud builds submit . --project="customer-segmentation-465514" --gcs-source-staging-dir="gs://customer-segmentation-cloudbuild/source" --tag "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}" --quiet
+    # - echo "Build complete."
+    # 1. Install the gcloud CLI in the temporary Docker container
+    - apk add --no-cache google-cloud-cli
+    
+    # 2. Authenticate to Google Cloud using the CI/CD variable
     - echo "Authenticating with Google Cloud..."
-    - gcloud auth activate-service-account --key-file $GCP_SERVICE_ACCOUNT_KEY
-    - echo "Configuring Docker to use gcloud as a credential helper..."
-    - gcloud auth configure-docker $GCP_REGION-docker.pkg.dev
-    - echo "Building the Docker image with Google Cloud Build..."
-    # - gcloud builds submit --no-source --tag "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
-    - gcloud builds submit . --project="customer-segmentation-465514" --gcs-source-staging-dir="gs://customer-segmentation-cloudbuild/source" --tag "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}" --quiet
+    - echo $GCP_SERVICE_ACCOUNT_KEY > /tmp/gcp_key.json
+    - gcloud auth activate-service-account --key-file=/tmp/gcp_key.json
+    
+    # 3. Configure Docker to use your Google Cloud credentials for pushing to Artifact Registry
+    - echo "Configuring Docker credentials..."
+    - gcloud auth configure-docker $GCP_REGION-docker.pkg.dev -q
+    
+    # 4. Build the Docker image directly on the runner
+    - echo "Building the Docker image..."
+    - docker build -t "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA" .
+    
+    # 5. Push the built image to your private Artifact Registry
+    - echo "Pushing image to Artifact Registry..."
+    - docker push "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
     - echo "Build complete."
+    
 
 deploy:
   stage: deploy
+  image: google/cloud-sdk:latest
   only:
     - main
   script:
@@ -34,6 +60,7 @@ deploy:
     - echo "Deploying to Google Cloud Run..."
     - gcloud run deploy $APP_NAME \
         --image "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA" \
+        --project "customer-segmentation-465514" \
         --platform "managed" \
         --region "$GCP_REGION" \
         --allow-unauthenticated # Use --no-allow-unauthenticated for private services
