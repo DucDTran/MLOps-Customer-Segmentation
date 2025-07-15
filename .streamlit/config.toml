@@ -19,3 +19,6 @@ showWidgetBorder=true
 
 [theme.sidebar]
 showWidgetBorder=true
+
+[server]
+maxUploadSize = 500
