@@ -1,0 +1,22 @@
+artifact_path: file:///Users/duc.tran/Personal/customer_segmentation_mlops/mlruns/0/models/m-ae80753b87e44cd49c778348061d25e1/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.7
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.0
+mlflow_version: 3.1.1
+model_id: m-ae80753b87e44cd49c778348061d25e1
+model_size_bytes: 8897674
+model_uuid: m-ae80753b87e44cd49c778348061d25e1
+prompts: null
+run_id: dafaeb780bb3410885875fb0b68c3c87
+utc_time_created: '2025-07-13 15:53:15.640649'

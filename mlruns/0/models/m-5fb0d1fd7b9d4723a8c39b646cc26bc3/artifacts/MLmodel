@@ -1,0 +1,21 @@
+artifact_path: file:///Users/duc.tran/Personal/customer_segmentation_mlops/mlruns/0/models/m-5fb0d1fd7b9d4723a8c39b646cc26bc3/artifacts
+flavors:
+  lightgbm:
+    code: null
+    data: model.pkl
+    lgb_version: 4.6.0
+    model_class: lightgbm.sklearn.LGBMClassifier
+  python_function:
+    data: model.pkl
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.lightgbm
+    python_version: 3.12.7
+mlflow_version: 3.1.1
+model_id: m-5fb0d1fd7b9d4723a8c39b646cc26bc3
+model_size_bytes: 3091797
+model_uuid: m-5fb0d1fd7b9d4723a8c39b646cc26bc3
+prompts: null
+run_id: dafaeb780bb3410885875fb0b68c3c87
+utc_time_created: '2025-07-13 15:53:20.411028'
