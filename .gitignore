@@ -223,6 +223,5 @@ tests/
 plugins/
 CUSTOMER_SEGMENTATION_MLOPS.egg-info
 include/
-artifacts/
-data/
+mlruns/
 
